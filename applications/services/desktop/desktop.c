@@ -237,7 +237,7 @@ static void desktop_clock_timer_callback(void* context) {
 }
 
 void desktop_lock(Desktop* desktop, bool pin_lock) {
-    pin_lock = pin_lock && desktop->settings.pin_code.length > 0;
+    pin_lock = pin_lock && desktop_pin_is_valid(&desktop->settings.pin_code);
     if(!furi_hal_rtc_is_flag_set(FuriHalRtcFlagLock)) {
         furi_hal_rtc_set_pin_fails(0);
     }
@@ -457,10 +457,13 @@ int32_t desktop_srv(void* p) {
 
     Desktop* desktop = desktop_alloc();
 
-    bool loaded = DESKTOP_SETTINGS_LOAD(&desktop->settings);
-    if(!loaded) {
+    bool ok = DESKTOP_SETTINGS_LOAD(&desktop->settings);
+    if(ok) {
+        ok = desktop_pin_is_valid(&desktop->settings.pin_code);
+    }
+    if(!ok) {
         memset(&desktop->settings, 0, sizeof(desktop->settings));
-        DESKTOP_SETTINGS_SAVE(&desktop->settings);
+        furi_hal_rtc_reset_flag(FuriHalRtcFlagLock);
     }
 
     desktop_clock_toggle_view(desktop, desktop->settings.display_clock);

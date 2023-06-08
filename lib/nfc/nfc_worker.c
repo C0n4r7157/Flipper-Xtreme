@@ -175,7 +175,6 @@ void nfc_worker_nfcv_emulate(NfcWorker* nfc_worker) {
                 }
             }
         }
-        furi_delay_ms(10);
     }
     nfcv_emu_deinit(nfcv_data);
 
@@ -203,7 +202,6 @@ void nfc_worker_nfcv_sniff(NfcWorker* nfc_worker) {
                 nfc_worker->callback(NfcWorkerEventNfcVCommandExecuted, nfc_worker->context);
             }
         }
-        furi_delay_ms(10);
     }
     nfcv_emu_deinit(nfcv_data);
 
@@ -299,10 +297,10 @@ void nfc_worker_nfcv_unlock(NfcWorker* nfc_worker) {
                     ret = slix_unlock(nfcv_data, 4);
                 } else {
                     key = 0x7FFD6E5B;
-                    key_data[0] = key >> 24;
-                    key_data[1] = key >> 16;
-                    key_data[2] = key >> 8;
-                    key_data[3] = key >> 0;
+                    key_data[0] = (key >> 24) & 0xFF;
+                    key_data[1] = (key >> 16) & 0xFF;
+                    key_data[2] = (key >> 8) & 0xFF;
+                    key_data[3] = (key >> 0) & 0xFF;
                     ret = slix_unlock(nfcv_data, 4);
 
                     if(ret != ERR_NONE) {
@@ -319,10 +317,10 @@ void nfc_worker_nfcv_unlock(NfcWorker* nfc_worker) {
                         }
 
                         key = 0x0F0F0F0F;
-                        key_data[0] = key >> 24;
-                        key_data[1] = key >> 16;
-                        key_data[2] = key >> 8;
-                        key_data[3] = key >> 0;
+                        key_data[0] = (key >> 24) & 0xFF;
+                        key_data[1] = (key >> 16) & 0xFF;
+                        key_data[2] = (key >> 8) & 0xFF;
+                        key_data[3] = (key >> 0) & 0xFF;
                         ret = slix_unlock(nfcv_data, 4);
                     }
                 }

@@ -38,16 +38,17 @@ void archive_scene_info_on_enter(void* context) {
 
     // Directory path
     path_extract_dirname(furi_string_get_cstr(current->path), dirname);
-    if(strcmp(furi_string_get_cstr(dirname), "/any") == 0) {
-        furi_string_replace(dirname, STORAGE_ANY_PATH_PREFIX, "/");
-    } else {
-        furi_string_replace(dirname, STORAGE_ANY_PATH_PREFIX, "");
-    }
 
     // File size
     FileInfo fileinfo;
-    storage_common_stat(fs_api, furi_string_get_cstr(current->path), &fileinfo);
-    if(fileinfo.size <= 1024) {
+    if(storage_common_stat(fs_api, furi_string_get_cstr(current->path), &fileinfo) != FSE_OK ||
+       file_info_is_dir(&fileinfo)) {
+        snprintf(
+            file_info_message,
+            sizeof(file_info_message),
+            "Size: \e#N/A\e#\n%s",
+            furi_string_get_cstr(dirname));
+    } else if(fileinfo.size <= 1024) {
         furi_string_printf(str_size, "%lld", fileinfo.size);
         snprintf(
             file_info_message,

@@ -14,6 +14,7 @@ extern "C" {
 #include <gui/modules/text_input.h>
 #include <gui/modules/byte_input.h>
 #include "../views/bad_kb_view.h"
+#include "../bad_kb_paths.h"
 
 #define FILE_BUFFER_LEN 16
 
@@ -117,7 +118,6 @@ extern const uint8_t BAD_KB_EMPTY_MAC_ADDRESS[BAD_KB_MAC_ADDRESS_LEN];
 
 typedef enum {
     BadKbAppErrorNoFiles,
-    BadKbAppErrorCloseRpc,
 } BadKbAppError;
 
 typedef struct {
@@ -126,6 +126,12 @@ typedef struct {
     FuriHalUsbInterface* usb_mode;
     GapPairing bt_mode;
 } BadKbConfig;
+
+typedef enum {
+    BadKbConnModeNone,
+    BadKbConnModeUsb,
+    BadKbConnModeBt,
+} BadKbConnMode;
 
 struct BadKbApp {
     Gui* gui;
@@ -149,6 +155,8 @@ struct BadKbApp {
     bool bt_remember;
     BadKbConfig config;
     BadKbConfig prev_config;
+
+    BadKbConnMode conn_mode;
     FuriThread* conn_init_thread;
     FuriThread* switch_mode_thread;
 };
@@ -156,6 +164,10 @@ struct BadKbApp {
 int32_t bad_kb_config_switch_mode(BadKbApp* app);
 
 void bad_kb_config_refresh_menu(BadKbApp* app);
+
+int32_t bad_kb_conn_refresh(BadKbApp* app);
+
+void bad_kb_conn_reset(BadKbApp* app);
 
 #ifdef __cplusplus
 }
