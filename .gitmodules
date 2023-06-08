@@ -40,3 +40,9 @@
 [submodule "lib/stm32wb_copro"]
 	path = lib/stm32wb_copro
 	url = https://github.com/flipperdevices/stm32wb_copro.git
+[submodule "gh repo clone UberGuidoZ/Flipper"]
+	path = gh repo clone UberGuidoZ/Flipper
+	url = https://github.com/UberGuidoZ/Flipper.git
+[submodule "Flipper"]
+	path = Flipper
+	url = https://github.com/UberGuidoZ/Flipper.git
